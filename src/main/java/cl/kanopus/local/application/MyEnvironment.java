@@ -3,7 +3,7 @@ package cl.kanopus.local.application;
 import cl.kanopus.local.application.enums.Property;
 import java.util.Date;
 import java.util.TimeZone;
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
