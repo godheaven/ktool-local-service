@@ -1,3 +1,26 @@
+/*-
+ * !--
+ * For support and inquiries regarding this library, please contact:
+ *   soporte@kanopus.cl
+ * 
+ * Project website:
+ *   https://www.kanopus.cl
+ * %%
+ * Copyright (C) 2025 - 2026 Pablo Díaz Saavedra
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * --!
+ */
 package cl.kanopus.launcher.view;
 
 import cl.kanopus.MyApplication;
@@ -8,12 +31,15 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.List;
 import java.util.Properties;
+import java.awt.EventQueue;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import org.apache.pdfbox.io.IOUtils;
 import org.springframework.boot.ExitCodeGenerator;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -26,6 +52,8 @@ public class Home extends javax.swing.JFrame {
     private PrinterService printerService;
     private final String PREFERENCES = System.getProperty("java.io.tmpdir") + File.separator + "kanopus-services.properties";
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(Home.class);
+
     /**
      * Creates new form NewJFrame
      */
@@ -34,11 +62,37 @@ public class Home extends javax.swing.JFrame {
 
         setLocationRelativeTo(null);
         setVisible(false);
-        if (ctx == null) {
-            ctx = SpringApplication.run(MyApplication.class);
-            printerService = ctx.getBean(PrinterService.class);
-        }
 
+        // Do not run Spring synchronously on the EDT: start it in a background thread
+        LOGGER.info("Home constructor: starting background initialization");
+        System.out.println("Home: constructor invoked");
+
+        new Thread(() -> {
+            try {
+                LOGGER.info("Starting Spring context in background thread");
+                ctx = SpringApplication.run(MyApplication.class);
+                printerService = ctx.getBean(PrinterService.class);
+                LOGGER.info("Spring context started and PrinterService obtained");
+                System.out.println("Home: Spring started, loading printers on EDT");
+
+                // Now load printers on the EDT
+                EventQueue.invokeLater(() -> {
+                    try {
+                        loadPrinters();
+                        // ensure radio buttons state handled
+                        jRadioButton1ItemStateChanged(null);
+                    } catch (Exception ex) {
+                        LOGGER.error("Error while loading printers on EDT", ex);
+                    }
+                });
+
+            } catch (Exception ex) {
+                LOGGER.error("Failed to start Spring context in background", ex);
+                System.err.println("Failed to start Spring context: " + ex.getMessage());
+            }
+        }, "home-spring-starter").start();
+
+        // Preferences loading can be done immediately (non-blocking)
         try {
             //Cargamos el archivo de preferencias
             File file = new File(PREFERENCES);
@@ -50,11 +104,14 @@ public class Home extends javax.swing.JFrame {
                 PrinterController.paper = property.getProperty("paper");
             }
         } catch (Exception ex) {
+            LOGGER.warn("Could not read preferences file: {}", ex.getMessage());
             System.err.println("No es posible leer el archivo de preferencias: " + ex.getMessage());
         }
 
-        loadPrinters();
-        jRadioButton1ItemStateChanged(null);
+        LOGGER.info("Home constructor finished");
+        System.out.println("Home: constructor finished");
+
+        // Note: loadPrinters() will be invoked once printerService becomes available
     }
 
     /**
@@ -266,9 +323,27 @@ public class Home extends javax.swing.JFrame {
     }//GEN-LAST:event_jRadioButton1ItemStateChanged
 
     public void toggle() {
+        // Ensure toggle runs on EDT
+        if (!EventQueue.isDispatchThread()) {
+            EventQueue.invokeLater(this::toggle);
+            return;
+        }
+
+        LOGGER.info("toggle() called on EDT. visibleBefore={}", isVisible());
+        System.out.println("Home.toggle() called. visibleBefore=" + isVisible());
+
         setVisible(!isVisible());
+
+        LOGGER.info("toggle() finished. visibleAfter={}", isVisible());
+        System.out.println("Home.toggle() finished. visibleAfter=" + isVisible());
+
         if (isVisible()) {
-            loadPrinters();
+            if (printerService != null) {
+                loadPrinters();
+            } else {
+                LOGGER.info("PrinterService not ready yet, skipping loadPrinters");
+                System.out.println("PrinterService not ready yet, skipping loadPrinters");
+            }
         }
     }
 
