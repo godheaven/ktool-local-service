@@ -2,7 +2,7 @@
  * !--
  * For support and inquiries regarding this library, please contact:
  *   soporte@kanopus.cl
- * 
+ *
  * Project website:
  *   https://www.kanopus.cl
  * %%
@@ -11,9 +11,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,15 +24,14 @@
 package cl.kanopus.local.web;
 
 import cl.kanopus.MyApplication;
-import cl.kanopus.local.service.to.Document;
 import cl.kanopus.local.service.PrinterService;
+import cl.kanopus.local.service.to.Document;
 import cl.kanopus.local.service.to.Printer;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-
+import jakarta.validation.Valid;
 import java.util.Base64;
 import java.util.List;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -45,7 +44,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- *
  * @author Pablo Diaz Saavedra
  * @email pabloandres.diazsaavedra@gmail.com
  */
@@ -55,8 +53,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = MyApplication.TAG_PRINTER)
 public class PrinterController {
 
-    @Autowired
-    private PrinterService printerService;
+    @Autowired private PrinterService printerService;
 
     public static String PAPER_80mm = "80mm";
     public static String PAPER_58mm = "58mm";
@@ -64,7 +61,10 @@ public class PrinterController {
     public static String printer;
     public static String paper;
 
-    @Operation(summary = "Print a PDF file in thermal printer", description = "Allows you to print a file that is delivered, specifying a valid printer name. If the printer does not exist it will throw an error.")
+    @Operation(
+            summary = "Print a PDF file in thermal printer",
+            description =
+                    "Allows you to print a file that is delivered, specifying a valid printer name. If the printer does not exist it will throw an error.")
     @PostMapping(value = "/print/thermal-pdf")
     @ResponseStatus(HttpStatus.CREATED)
     public Printer printThermal(@Valid @RequestBody Document document) throws Exception {
@@ -72,7 +72,10 @@ public class PrinterController {
         return new Printer(printer);
     }
 
-    @Operation(summary = "Print a PDF file in default printer", description = "Allows you to print a file that is delivered, specifying a valid printer name. If the printer does not exist it will throw an error.")
+    @Operation(
+            summary = "Print a PDF file in default printer",
+            description =
+                    "Allows you to print a file that is delivered, specifying a valid printer name. If the printer does not exist it will throw an error.")
     @PostMapping(value = "/print/default-pdf")
     @ResponseStatus(HttpStatus.CREATED)
     public Printer printDefault(@Valid @RequestBody Document document) throws Exception {
@@ -80,11 +83,13 @@ public class PrinterController {
         return new Printer(printer);
     }
 
-    @Operation(summary = "Gets the list of connected printers", description = "It allows obtaining the list of printers that are configured within the local environment.")
+    @Operation(
+            summary = "Gets the list of connected printers",
+            description =
+                    "It allows obtaining the list of printers that are configured within the local environment.")
     @GetMapping(value = "/printers")
     @ResponseStatus(HttpStatus.OK)
     public List<String> getPrinters() throws Exception {
         return printerService.getPrinters();
     }
-
 }

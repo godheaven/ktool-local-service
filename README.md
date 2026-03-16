@@ -1,6 +1,8 @@
+<p align="left">
+  <img src="https://www.kanopus.cl/assets/kanopus_black.png" width="220"/>
+</p>
 
-![Logo](https://www.kanopus.cl/admin/javax.faces.resource/images/logo-gray.png.xhtml?ln=paradise-layout)
-
+![Maven](https://img.shields.io/maven-central/v/cl.kanopus.tool/ktool-local-service) ![License](https://img.shields.io/badge/license-Apache%20License%202.0-blue) ![Java](https://img.shields.io/badge/java-17+-orange)
 
 # ktool-local-service
 
@@ -9,34 +11,67 @@ This project is designed to run on a client machine and serve as data exchange f
 To review all the available methods once the service has started, you can try it through the automatic documentation created with "Swagger" at the following URL:
 http://localhost:1982/local-services/swagger-ui/
 
-## Usage/Examples
+## ✨ Features
 
-```javascript
+- Ready-to-run automation tool for the Kanopus ecosystem
+- Supports command-line execution for developer workflows
+- Suitable for Docker-based execution in controlled environments
+- Designed to improve productivity and operational consistency
 
-<script type="text/javascript" src="printer.js"></script>
-const localServices = new LocalServices("http://localhost:1982/local-services");
+## 🚀 Installation
 
-//Print with thermal
-var base64 = ".......";
-localServices.printThermal(base64);
+You can run this tool using Docker or from the command line.
 
-//Show printers connected to the computer
-localServices.showPrinters();
+**Option 1 — Docker**
+
+```bash
+docker run --rm ktool-local-service:4.03.0
 ```
 
+**Option 2 — Command line**
 
-## Authors
+```bash
+java -jar ktool-local-service-4.03.0.jar
+```
 
-- [@pabloandres.diazsaavedra](https://www.linkedin.com/in/pablo-diaz-saavedra-4b7b0522/)
+## ⚙️ Configurable properties
 
+| Property | Description | Default |
+| --- | --- | --- |
+| `server.compression.enabled` | Configuration property | `true` |
+| `server.compression.mime-types` | Configuration property | `text/html,text/plain,text/css,application/javascript,application/json` |
+| `server.error.include-stacktrace` | Configuration property | `never` |
+| `server.port` | Configuration property | `1982` |
+| `server.servlet.context-path` | Configuration property | `/local-services` |
+| `spring.jackson.date-format` | Configuration property | `yyyy-MM-dd'T'HH:mm:ss` |
+| `spring.jackson.default-property-inclusion` | Configuration property | `non_null` |
+| `spring.jackson.time-zone` | Configuration property | `America/Santiago` |
 
-## License
+## 🚀 Usage Guide
+
+Example command:
+
+```bash
+java -jar ktool-local-service-4.03.0.jar
+```
+
+Replace this example with the real command-line parameters supported by the tool.
+
+## 👤 Author
+
+**Pablo Andrés Díaz Saavedra** — Founder of **Kanopus – Estrellas del Software**
+
+Kanopus builds tools and platforms that simplify software development and DevOps processes.
+
+[GitHub](https://github.com/godheaven) | [LinkedIn](https://www.linkedin.com/in/pablo-diaz-saavedra-4b7b0522/) | [Website](https://kanopus.cl)
+
+## 📄 License
 
 This software is licensed under the Apache License, Version 2.0. See the LICENSE file for details.
 I hope you enjoy it.
 
 [![Apache License, Version 2.0](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg)](https://opensource.org/license/apache-2-0)
 
-## Support
+## 🛟 Support
 
-For support, email soporte@kanopus.cl
+For support or questions contact: 📧 [soporte@kanopus.cl](mailto:soporte@kanopus.cl)

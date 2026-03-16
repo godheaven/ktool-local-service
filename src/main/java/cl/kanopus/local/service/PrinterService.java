@@ -2,7 +2,7 @@
  * !--
  * For support and inquiries regarding this library, please contact:
  *   soporte@kanopus.cl
- * 
+ *
  * Project website:
  *   https://www.kanopus.cl
  * %%
@@ -11,9 +11,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -40,22 +40,23 @@ import javax.print.attribute.PrintRequestAttributeSet;
 import javax.print.attribute.standard.MediaPrintableArea;
 import javax.print.attribute.standard.MediaSize;
 import javax.print.attribute.standard.MediaSizeName;
-import org.springframework.stereotype.Service;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.printing.PDFPrintable;
 import org.apache.pdfbox.printing.Scaling;
+import org.springframework.stereotype.Service;
 
 /**
- *
  * @author Pablo Diaz Saavedra
  * @email pabloandres.diazsaavedra@gmail.com
- *
  */
 @Service
 public class PrinterService {
 
-    private final int THERMAL_WIDTH = (int) (80 * 2.83); //80mm
-    private final int THERMAL_HEIGHT = (int) (2000 * 2.83);  //297mm (This generates the maximum length, it is multiplied by 3 to avoid cuts)
+    private final int THERMAL_WIDTH = (int) (80 * 2.83); // 80mm
+    private final int THERMAL_HEIGHT =
+            (int) (2000 * 2.83); // 297mm (This generates the maximum length, it is multiplied
+
+    // by 3 to avoid cuts)
 
     public List<String> getPrinters() throws PrinterException {
         List<String> availables = new ArrayList<>();
@@ -92,7 +93,8 @@ public class PrinterService {
             paper.setImageableArea(marginLeft, 0, paper.getWidth(), paper.getHeight());
             pageFormat.setPaper(paper);
 
-            PDFPrintable printable = new PDFPrintable(document, Scaling.ACTUAL_SIZE, false, 0, false);
+            PDFPrintable printable =
+                    new PDFPrintable(document, Scaling.ACTUAL_SIZE, false, 0, false);
 
             Book book = new Book();
             book.append(printable, pageFormat);
@@ -111,7 +113,6 @@ public class PrinterService {
                     Logger.getLogger(PrinterService.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-
         }
     }
 
@@ -137,9 +138,10 @@ public class PrinterService {
         PrinterJob printerThermal = getDefaultPrinter(name);
 
         PrintRequestAttributeSet printReqAttrs = new HashPrintRequestAttributeSet();
-        PrintRequestAttribute jobPrinArea = new MediaPrintableArea(0, 0, THERMAL_WIDTH, THERMAL_HEIGHT, MediaPrintableArea.MM);
+        PrintRequestAttribute jobPrinArea =
+                new MediaPrintableArea(0, 0, THERMAL_WIDTH, THERMAL_HEIGHT, MediaPrintableArea.MM);
         printReqAttrs.add(jobPrinArea);
-        //pass specific attributes to printer
+        // pass specific attributes to printer
         printerThermal.print(printReqAttrs);
 
         return printerThermal;
@@ -147,7 +149,9 @@ public class PrinterService {
 
     private PrinterException createPrinterException(String name) throws PrinterException {
         StringBuilder sb = new StringBuilder();
-        sb.append("The printer named \"").append(name).append("\" does not exist on your computer.\n");
+        sb.append("The printer named \"")
+                .append(name)
+                .append("\" does not exist on your computer.\n");
         List<String> printers = getPrinters();
         if (printers.isEmpty()) {
             sb.append("No printers detected on your computer!\n");

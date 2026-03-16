@@ -2,7 +2,7 @@
  * !--
  * For support and inquiries regarding this library, please contact:
  *   soporte@kanopus.cl
- * 
+ *
  * Project website:
  *   https://www.kanopus.cl
  * %%
@@ -11,9 +11,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,23 +26,22 @@ package cl.kanopus.launcher.view;
 import cl.kanopus.MyApplication;
 import cl.kanopus.local.service.PrinterService;
 import cl.kanopus.local.web.PrinterController;
+import java.awt.EventQueue;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.List;
 import java.util.Properties;
-import java.awt.EventQueue;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import org.apache.pdfbox.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.ExitCodeGenerator;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
- *
  * @author godheaven
  */
 public class Home extends javax.swing.JFrame {
@@ -50,13 +49,12 @@ public class Home extends javax.swing.JFrame {
     int xMouse, yMouse;
     private ConfigurableApplicationContext ctx;
     private PrinterService printerService;
-    private final String PREFERENCES = System.getProperty("java.io.tmpdir") + File.separator + "kanopus-services.properties";
+    private final String PREFERENCES =
+            System.getProperty("java.io.tmpdir") + File.separator + "kanopus-services.properties";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Home.class);
 
-    /**
-     * Creates new form NewJFrame
-     */
+    /** Creates new form NewJFrame */
     public Home() {
         initComponents();
 
@@ -67,34 +65,40 @@ public class Home extends javax.swing.JFrame {
         LOGGER.info("Home constructor: starting background initialization");
         System.out.println("Home: constructor invoked");
 
-        new Thread(() -> {
-            try {
-                LOGGER.info("Starting Spring context in background thread");
-                ctx = SpringApplication.run(MyApplication.class);
-                printerService = ctx.getBean(PrinterService.class);
-                LOGGER.info("Spring context started and PrinterService obtained");
-                System.out.println("Home: Spring started, loading printers on EDT");
+        new Thread(
+                        () -> {
+                            try {
+                                LOGGER.info("Starting Spring context in background thread");
+                                ctx = SpringApplication.run(MyApplication.class);
+                                printerService = ctx.getBean(PrinterService.class);
+                                LOGGER.info("Spring context started and PrinterService obtained");
+                                System.out.println("Home: Spring started, loading printers on EDT");
 
-                // Now load printers on the EDT
-                EventQueue.invokeLater(() -> {
-                    try {
-                        loadPrinters();
-                        // ensure radio buttons state handled
-                        jRadioButton1ItemStateChanged(null);
-                    } catch (Exception ex) {
-                        LOGGER.error("Error while loading printers on EDT", ex);
-                    }
-                });
+                                // Now load printers on the EDT
+                                EventQueue.invokeLater(
+                                        () -> {
+                                            try {
+                                                loadPrinters();
+                                                // ensure radio buttons state handled
+                                                jRadioButton1ItemStateChanged(null);
+                                            } catch (Exception ex) {
+                                                LOGGER.error(
+                                                        "Error while loading printers on EDT", ex);
+                                            }
+                                        });
 
-            } catch (Exception ex) {
-                LOGGER.error("Failed to start Spring context in background", ex);
-                System.err.println("Failed to start Spring context: " + ex.getMessage());
-            }
-        }, "home-spring-starter").start();
+                            } catch (Exception ex) {
+                                LOGGER.error("Failed to start Spring context in background", ex);
+                                System.err.println(
+                                        "Failed to start Spring context: " + ex.getMessage());
+                            }
+                        },
+                        "home-spring-starter")
+                .start();
 
         // Preferences loading can be done immediately (non-blocking)
         try {
-            //Cargamos el archivo de preferencias
+            // Cargamos el archivo de preferencias
             File file = new File(PREFERENCES);
             if (file.exists()) {
                 Properties property = new Properties();
@@ -115,9 +119,8 @@ public class Home extends javax.swing.JFrame {
     }
 
     /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
+     * This method is called from within the constructor to initialize the form. WARNING: Do NOT
+     * modify this code. The content of this method is always regenerated by the Form Editor.
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -141,13 +144,19 @@ public class Home extends javax.swing.JFrame {
         setResizable(false);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jImpresoras.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        jImpresoras.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                jImpresorasItemStateChanged(evt);
-            }
-        });
-        getContentPane().add(jImpresoras, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 170, 250, -1));
+        jImpresoras.setModel(
+                new javax.swing.DefaultComboBoxModel<>(
+                        new String[] {"Item 1", "Item 2", "Item 3", "Item 4"}));
+        jImpresoras.addItemListener(
+                new java.awt.event.ItemListener() {
+                    public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                        jImpresorasItemStateChanged(evt);
+                    }
+                });
+        getContentPane()
+                .add(
+                        jImpresoras,
+                        new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 170, 250, -1));
 
         buttonGroup1.add(jRadioButton1);
         jRadioButton1.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
@@ -155,72 +164,105 @@ public class Home extends javax.swing.JFrame {
         jRadioButton1.setSelected(true);
         jRadioButton1.setText("80 mm");
         jRadioButton1.setOpaque(false);
-        jRadioButton1.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                jRadioButton1ItemStateChanged(evt);
-            }
-        });
-        getContentPane().add(jRadioButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 220, 108, -1));
+        jRadioButton1.addItemListener(
+                new java.awt.event.ItemListener() {
+                    public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                        jRadioButton1ItemStateChanged(evt);
+                    }
+                });
+        getContentPane()
+                .add(
+                        jRadioButton1,
+                        new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 220, 108, -1));
 
         buttonGroup1.add(jRadioButton2);
         jRadioButton2.setFont(new java.awt.Font("Dialog", 1, 16)); // NOI18N
         jRadioButton2.setForeground(new java.awt.Color(255, 255, 255));
         jRadioButton2.setText("58 mm");
         jRadioButton2.setOpaque(false);
-        getContentPane().add(jRadioButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 220, 108, -1));
+        getContentPane()
+                .add(
+                        jRadioButton2,
+                        new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 220, 108, -1));
 
         JLabelPapel.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         JLabelPapel.setForeground(new java.awt.Color(255, 255, 255));
         JLabelPapel.setLabelFor(jRadioButton1);
         JLabelPapel.setText("Papel");
-        getContentPane().add(JLabelPapel, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 220, -1, -1));
+        getContentPane()
+                .add(
+                        JLabelPapel,
+                        new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 220, -1, -1));
 
         jLabelImpresora.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         jLabelImpresora.setForeground(new java.awt.Color(255, 255, 255));
         jLabelImpresora.setLabelFor(jImpresoras);
         jLabelImpresora.setText("Impresora");
-        getContentPane().add(jLabelImpresora, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 170, -1, -1));
+        getContentPane()
+                .add(
+                        jLabelImpresora,
+                        new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 170, -1, -1));
 
-        boton_cerrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/button_exit1.png"))); // NOI18N
+        boton_cerrar.setIcon(
+                new javax.swing.ImageIcon(
+                        getClass().getResource("/images/button_exit1.png"))); // NOI18N
         boton_cerrar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        boton_cerrar.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                boton_cerrarMouseClicked(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                boton_cerrarMouseExited(evt);
-            }
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                boton_cerrarMouseEntered(evt);
-            }
-        });
-        getContentPane().add(boton_cerrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 380, 210, 40));
+        boton_cerrar.addMouseListener(
+                new java.awt.event.MouseAdapter() {
+                    public void mouseClicked(java.awt.event.MouseEvent evt) {
+                        boton_cerrarMouseClicked(evt);
+                    }
 
-        boton_imprimir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/button_print1.png"))); // NOI18N
+                    public void mouseExited(java.awt.event.MouseEvent evt) {
+                        boton_cerrarMouseExited(evt);
+                    }
+
+                    public void mouseEntered(java.awt.event.MouseEvent evt) {
+                        boton_cerrarMouseEntered(evt);
+                    }
+                });
+        getContentPane()
+                .add(
+                        boton_cerrar,
+                        new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 380, 210, 40));
+
+        boton_imprimir.setIcon(
+                new javax.swing.ImageIcon(
+                        getClass().getResource("/images/button_print1.png"))); // NOI18N
         boton_imprimir.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        boton_imprimir.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                boton_imprimirMouseClicked(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                boton_imprimirMouseExited(evt);
-            }
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                boton_imprimirMouseEntered(evt);
-            }
-        });
-        getContentPane().add(boton_imprimir, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 310, 210, 40));
+        boton_imprimir.addMouseListener(
+                new java.awt.event.MouseAdapter() {
+                    public void mouseClicked(java.awt.event.MouseEvent evt) {
+                        boton_imprimirMouseClicked(evt);
+                    }
+
+                    public void mouseExited(java.awt.event.MouseEvent evt) {
+                        boton_imprimirMouseExited(evt);
+                    }
+
+                    public void mouseEntered(java.awt.event.MouseEvent evt) {
+                        boton_imprimirMouseEntered(evt);
+                    }
+                });
+        getContentPane()
+                .add(
+                        boton_imprimir,
+                        new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 310, 210, 40));
 
         jButtonHide.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
         jButtonHide.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jButtonHide.setText("X");
         jButtonHide.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jButtonHide.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButtonHideMouseClicked(evt);
-            }
-        });
-        getContentPane().add(jButtonHide, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 0, 40, -1));
+        jButtonHide.addMouseListener(
+                new java.awt.event.MouseAdapter() {
+                    public void mouseClicked(java.awt.event.MouseEvent evt) {
+                        jButtonHideMouseClicked(evt);
+                    }
+                });
+        getContentPane()
+                .add(
+                        jButtonHide,
+                        new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 0, 40, -1));
 
         barra_superior.setCursor(new java.awt.Cursor(java.awt.Cursor.MOVE_CURSOR));
         barra_superior.setOpaque(false);
@@ -228,99 +270,139 @@ public class Home extends javax.swing.JFrame {
         javax.swing.GroupLayout barra_superiorLayout = new javax.swing.GroupLayout(barra_superior);
         barra_superior.setLayout(barra_superiorLayout);
         barra_superiorLayout.setHorizontalGroup(
-            barra_superiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 460, Short.MAX_VALUE)
-        );
+                barra_superiorLayout
+                        .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 460, Short.MAX_VALUE));
         barra_superiorLayout.setVerticalGroup(
-            barra_superiorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 30, Short.MAX_VALUE)
-        );
+                barra_superiorLayout
+                        .createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 30, Short.MAX_VALUE));
 
-        getContentPane().add(barra_superior, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 460, 30));
+        getContentPane()
+                .add(
+                        barra_superior,
+                        new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 460, 30));
 
-        background.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/background.png"))); // NOI18N
-        background.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
-            public void mouseDragged(java.awt.event.MouseEvent evt) {
-                backgroundMouseDragged(evt);
-            }
-        });
-        background.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                backgroundMousePressed(evt);
-            }
-        });
-        getContentPane().add(background, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 460, -1));
+        background.setIcon(
+                new javax.swing.ImageIcon(
+                        getClass().getResource("/images/background.png"))); // NOI18N
+        background.addMouseMotionListener(
+                new java.awt.event.MouseMotionAdapter() {
+                    public void mouseDragged(java.awt.event.MouseEvent evt) {
+                        backgroundMouseDragged(evt);
+                    }
+                });
+        background.addMouseListener(
+                new java.awt.event.MouseAdapter() {
+                    public void mousePressed(java.awt.event.MouseEvent evt) {
+                        backgroundMousePressed(evt);
+                    }
+                });
+        getContentPane()
+                .add(background, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 460, -1));
 
         pack();
-    }// </editor-fold>//GEN-END:initComponents
+    } // </editor-fold>//GEN-END:initComponents
 
-    private void jButtonHideMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButtonHideMouseClicked
+    private void jButtonHideMouseClicked(
+            java.awt.event.MouseEvent evt) { // GEN-FIRST:event_jButtonHideMouseClicked
         this.setVisible(false);
-    }//GEN-LAST:event_jButtonHideMouseClicked
+    } // GEN-LAST:event_jButtonHideMouseClicked
 
-    private void backgroundMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_backgroundMousePressed
+    private void backgroundMousePressed(
+            java.awt.event.MouseEvent evt) { // GEN-FIRST:event_backgroundMousePressed
         xMouse = evt.getX();
         yMouse = evt.getY();
-    }//GEN-LAST:event_backgroundMousePressed
+    } // GEN-LAST:event_backgroundMousePressed
 
-    private void backgroundMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_backgroundMouseDragged
+    private void backgroundMouseDragged(
+            java.awt.event.MouseEvent evt) { // GEN-FIRST:event_backgroundMouseDragged
         int x = evt.getXOnScreen();
         int y = evt.getYOnScreen();
         setLocation(x - xMouse, y - yMouse);
-    }//GEN-LAST:event_backgroundMouseDragged
+    } // GEN-LAST:event_backgroundMouseDragged
 
-    private void boton_imprimirMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_boton_imprimirMouseEntered
-        boton_imprimir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/button_print2.png"))); // NOI18N
-    }//GEN-LAST:event_boton_imprimirMouseEntered
+    private void boton_imprimirMouseEntered(
+            java.awt.event.MouseEvent evt) { // GEN-FIRST:event_boton_imprimirMouseEntered
+        boton_imprimir.setIcon(
+                new javax.swing.ImageIcon(
+                        getClass().getResource("/images/button_print2.png"))); // NOI18N
+    } // GEN-LAST:event_boton_imprimirMouseEntered
 
-    private void boton_cerrarMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_boton_cerrarMouseEntered
-        boton_cerrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/button_exit2.png"))); // NOI18N
-    }//GEN-LAST:event_boton_cerrarMouseEntered
+    private void boton_cerrarMouseEntered(
+            java.awt.event.MouseEvent evt) { // GEN-FIRST:event_boton_cerrarMouseEntered
+        boton_cerrar.setIcon(
+                new javax.swing.ImageIcon(
+                        getClass().getResource("/images/button_exit2.png"))); // NOI18N
+    } // GEN-LAST:event_boton_cerrarMouseEntered
 
-    private void boton_imprimirMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_boton_imprimirMouseExited
-        boton_imprimir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/button_print1.png"))); // NOI18N
-    }//GEN-LAST:event_boton_imprimirMouseExited
+    private void boton_imprimirMouseExited(
+            java.awt.event.MouseEvent evt) { // GEN-FIRST:event_boton_imprimirMouseExited
+        boton_imprimir.setIcon(
+                new javax.swing.ImageIcon(
+                        getClass().getResource("/images/button_print1.png"))); // NOI18N
+    } // GEN-LAST:event_boton_imprimirMouseExited
 
-    private void boton_cerrarMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_boton_cerrarMouseExited
-        boton_cerrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/button_exit1.png"))); // NOI18N
-    }//GEN-LAST:event_boton_cerrarMouseExited
+    private void boton_cerrarMouseExited(
+            java.awt.event.MouseEvent evt) { // GEN-FIRST:event_boton_cerrarMouseExited
+        boton_cerrar.setIcon(
+                new javax.swing.ImageIcon(
+                        getClass().getResource("/images/button_exit1.png"))); // NOI18N
+    } // GEN-LAST:event_boton_cerrarMouseExited
 
-    private void boton_cerrarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_boton_cerrarMouseClicked
-        int dialogResult = JOptionPane.showConfirmDialog(null, "¿Está seguro que desea cerrar la aplicación?", "Alerta", JOptionPane.YES_NO_OPTION);
+    private void boton_cerrarMouseClicked(
+            java.awt.event.MouseEvent evt) { // GEN-FIRST:event_boton_cerrarMouseClicked
+        int dialogResult =
+                JOptionPane.showConfirmDialog(
+                        null,
+                        "¿Está seguro que desea cerrar la aplicación?",
+                        "Alerta",
+                        JOptionPane.YES_NO_OPTION);
         if (dialogResult == JOptionPane.YES_OPTION) {
             try {
-                //Guardamos en el archivo de preferencias
+                // Guardamos en el archivo de preferencias
                 Properties property = new Properties();
                 property.setProperty("printer", PrinterController.printer);
                 property.setProperty("paper", PrinterController.paper);
                 property.store(new FileWriter(PREFERENCES), "Preferencias de impresora");
             } catch (Exception ex) {
-                System.err.println("No es posible guardar en el archivo de preferencias: " + ex.getMessage());
+                System.err.println(
+                        "No es posible guardar en el archivo de preferencias: " + ex.getMessage());
             }
 
-            //Cerramos la la aplicacion local
+            // Cerramos la la aplicacion local
             int exitCode = SpringApplication.exit(ctx, (ExitCodeGenerator) () -> 0);
             System.exit(exitCode);
-
         }
-    }//GEN-LAST:event_boton_cerrarMouseClicked
+    } // GEN-LAST:event_boton_cerrarMouseClicked
 
-    private void boton_imprimirMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_boton_imprimirMouseClicked
+    private void boton_imprimirMouseClicked(
+            java.awt.event.MouseEvent evt) { // GEN-FIRST:event_boton_imprimirMouseClicked
         try {
-            byte[] pdf = IOUtils.toByteArray(getClass().getResource("/pdf/test_" + PrinterController.paper + ".pdf").openStream());
+            byte[] pdf =
+                    IOUtils.toByteArray(
+                            getClass()
+                                    .getResource("/pdf/test_" + PrinterController.paper + ".pdf")
+                                    .openStream());
             printerService.printThermal(pdf, PrinterController.printer);
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Atención!", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(
+                    this, ex.getMessage(), "Atención!", JOptionPane.ERROR_MESSAGE);
         }
-    }//GEN-LAST:event_boton_imprimirMouseClicked
+    } // GEN-LAST:event_boton_imprimirMouseClicked
 
-    private void jImpresorasItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jImpresorasItemStateChanged
+    private void jImpresorasItemStateChanged(
+            java.awt.event.ItemEvent evt) { // GEN-FIRST:event_jImpresorasItemStateChanged
         PrinterController.printer = (String) jImpresoras.getSelectedItem();
-    }//GEN-LAST:event_jImpresorasItemStateChanged
+    } // GEN-LAST:event_jImpresorasItemStateChanged
 
-    private void jRadioButton1ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jRadioButton1ItemStateChanged
-        PrinterController.paper = jRadioButton1.isSelected() ? PrinterController.PAPER_80mm : PrinterController.PAPER_58mm;
-    }//GEN-LAST:event_jRadioButton1ItemStateChanged
+    private void jRadioButton1ItemStateChanged(
+            java.awt.event.ItemEvent evt) { // GEN-FIRST:event_jRadioButton1ItemStateChanged
+        PrinterController.paper =
+                jRadioButton1.isSelected()
+                        ? PrinterController.PAPER_80mm
+                        : PrinterController.PAPER_58mm;
+    } // GEN-LAST:event_jRadioButton1ItemStateChanged
 
     public void toggle() {
         // Ensure toggle runs on EDT
@@ -367,7 +449,8 @@ public class Home extends javax.swing.JFrame {
             }
 
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "Atención!", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(
+                    this, ex.getMessage(), "Atención!", JOptionPane.ERROR_MESSAGE);
         }
     }
 
