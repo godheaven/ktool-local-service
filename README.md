@@ -25,13 +25,13 @@ You can run this tool using Docker or from the command line.
 **Option 1 — Docker**
 
 ```bash
-docker run --rm ktool-local-service:4.03.1
+docker run --rm ktool-local-service:4.04.0
 ```
 
 **Option 2 — Command line**
 
 ```bash
-java -jar ktool-local-service-4.03.1.jar
+java -jar ktool-local-service-4.04.0.jar
 ```
 
 ## ⚙️ Configurable properties
@@ -52,7 +52,7 @@ java -jar ktool-local-service-4.03.1.jar
 Example command:
 
 ```bash
-java -jar ktool-local-service-4.03.1.jar
+java -jar ktool-local-service-4.04.0.jar
 ```
 
 Replace this example with the real command-line parameters supported by the tool.
