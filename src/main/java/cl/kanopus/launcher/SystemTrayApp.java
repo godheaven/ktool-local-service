@@ -32,11 +32,6 @@ import javax.swing.JOptionPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * @author Pablo Diaz Saavedra
- * @email pabloandres.diazsaavedra@gmail.com
- * @company Kanopus.cl
- */
 public class SystemTrayApp {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SystemTrayApp.class);
