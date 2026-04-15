@@ -41,11 +41,7 @@ public class MyEnvironment {
     @PostConstruct
     public void onStart() throws Exception {
 
-        log.debug(
-                "Local services running in "
-                        + TimeZone.getDefault().getDisplayName()
-                        + " timezone :"
-                        + new Date());
+        log.debug("Local services running in {} timezone :{}", TimeZone.getDefault().getDisplayName(), new Date());
         StringBuilder info = new StringBuilder();
 
         info.append("\n");
@@ -56,7 +52,7 @@ public class MyEnvironment {
         info.append("██   ██    ██     ██████   ██████  ███████ ███████\n");
 
         info.append("\n");
-        info.append(" :: Ktool Local Services             ::  (v4.04.0) \n");
+        info.append(" :: Ktool Local Services             ::  (v4.05.0) \n");
         info.append(" :: Author                           ::  Pablo Diaz Saavedra \n");
 
         log.debug(info.toString());
